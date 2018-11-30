@@ -82,6 +82,7 @@ export default class Drawer extends React.Component<DrawerProps, IDrawerState> {
 
   parentDrawer: Drawer;
   destoryClose: boolean;
+
   public componentDidUpdate(preProps: DrawerProps) {
     if (preProps.visible !== this.props.visible && this.parentDrawer) {
       if (this.props.visible) {
@@ -91,6 +92,7 @@ export default class Drawer extends React.Component<DrawerProps, IDrawerState> {
       }
     }
   }
+
   close = (e: EventType) => {
     if (this.props.visible !== undefined) {
       if (this.props.onClose) {
@@ -99,22 +101,26 @@ export default class Drawer extends React.Component<DrawerProps, IDrawerState> {
       return;
     }
   }
+
   onMaskClick = (e: EventType) => {
     if (!this.props.maskClosable) {
       return;
     }
     this.close(e);
   }
+
   push = () => {
     this.setState({
       push: true,
     });
   }
+
   pull = () => {
     this.setState({
       push: false,
     });
   }
+
   onDestoryTransitionEnd = () => {
     const isDestroyOnClose = this.getDestoryOnClose();
     if (!isDestroyOnClose) {
@@ -137,6 +143,7 @@ export default class Drawer extends React.Component<DrawerProps, IDrawerState> {
       return `translateY(${placement === 'top' ? 180 : -180}px)`;
     }
   }
+
   // render drawer body dom
   renderBody = () => {
     if (this.destoryClose && !this.props.visible) {
@@ -216,7 +223,7 @@ export default class Drawer extends React.Component<DrawerProps, IDrawerState> {
 
   // render Provider for Multi-level drawe
   renderProvider = (value: Drawer) => {
-    let { zIndex, style, placement, className, wrapClassName, width, height, ...rest } = this.props;
+    const { zIndex, style, placement, className, wrapClassName, width, height, ...rest } = this.props;
     warning(wrapClassName === undefined, 'wrapClassName is deprecated, please use className instead.');
     const haveMask = rest.mask ? "" : "no-mask";
     this.parentDrawer = value;

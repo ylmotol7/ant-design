@@ -1,8 +1,6 @@
 const path = require('path');
 const CSSSplitWebpackPlugin = require('css-split-webpack-plugin').default;
 const replaceLib = require('antd-tools/lib/replaceLib');
-const webpack = require('webpack');
-const WebpackBar = require('webpackbar');
 
 const isDev = process.env.NODE_ENV === 'development';
 const usePreact = process.env.REACT_ENV === 'preact';
@@ -13,6 +11,7 @@ function alertBabelConfig(rules) {
       if (rule.options.plugins.indexOf(replaceLib) === -1) {
         rule.options.plugins.push(replaceLib);
       }
+      // eslint-disable-next-line
       rule.options.plugins = rule.options.plugins.filter(plugin => (
         !plugin.indexOf || plugin.indexOf('babel-plugin-add-module-exports') === -1
       ));
@@ -20,23 +19,6 @@ function alertBabelConfig(rules) {
       alertBabelConfig(rule.use);
     }
   });
-}
-
-function usePrettyWebpackBar(config) {
-  // remove old progress plugin.
-  config.plugins = config.plugins
-    .filter((plugin) => {
-      return !(plugin instanceof webpack.ProgressPlugin)
-        && !(plugin instanceof WebpackBar);
-    });
-
-  // use brand new progress bar.
-  config.plugins.push(
-    new WebpackBar({
-      name: '📦  Site',
-      minimal: false,
-    })
-  );
 }
 
 module.exports = {
@@ -105,6 +87,7 @@ module.exports = {
     verbose: true,
   },
   webpackConfig(config) {
+    // eslint-disable-next-line
     config.resolve.alias = {
       'antd/lib': path.join(process.cwd(), 'components'),
       'antd/es': path.join(process.cwd(), 'components'),
@@ -113,11 +96,13 @@ module.exports = {
       'react-router': 'react-router/umd/ReactRouter',
     };
 
+    // eslint-disable-next-line
     config.externals = {
       'react-router-dom': 'ReactRouterDOM',
     };
 
     if (usePreact) {
+      // eslint-disable-next-line
       config.resolve.alias = Object.assign({}, config.resolve.alias, {
         react: 'preact-compat',
         'react-dom': 'preact-compat',
@@ -127,11 +112,11 @@ module.exports = {
     }
 
     if (isDev) {
+      // eslint-disable-next-line
       config.devtool = 'source-map';
     }
 
     alertBabelConfig(config.module.rules);
-    usePrettyWebpackBar(config);
 
     config.plugins.push(
       new CSSSplitWebpackPlugin({ size: 4000 }),
